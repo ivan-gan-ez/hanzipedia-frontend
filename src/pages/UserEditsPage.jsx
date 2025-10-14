@@ -1,0 +1,145 @@
+// this page shows all the edits made on a particular page
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Paper,
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  TableHead,
+  Button,
+} from "@mui/material";
+
+import { Link, useParams, useNavigate } from "react-router";
+import { useCookies } from "react-cookie";
+import { isUser } from "../utils/functions";
+import { getEdits } from "../utils/api_edit";
+import { getUserById } from "../utils/api_user";
+import { CrueltyFree } from "@mui/icons-material";
+
+function UserEditsPage() {
+  const navigate = useNavigate();
+
+  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
+  const { currentuser = {} } = cookies;
+  const { token = "" } = currentuser;
+
+  if (!isUser(currentuser)) {
+    navigate("/unauthorised");
+  }
+
+  const { id } = useParams();
+  const [user, setUser] = useState({});
+  const [edits, setEdits] = useState([]);
+
+  useEffect(() => {
+    getUserById(id, token)
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        navigate("/unauthorised");
+      });
+  }, [id, token]);
+
+  if (!user) {
+    navigate("/u/notfound");
+  }
+
+  useEffect(() => {
+    getEdits("", user._id, token)
+      .then((data) => {
+        setEdits(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [user]);
+
+  return (
+    <>
+      <Container maxWidth="lg" sx={{ py: 5, minHeight: "72vh" }}>
+        <Paper elevation={2} sx={{ py: 6, px: 6 }}>
+          <Box
+            sx={{
+              mb: 5,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box>
+              <Typography variant="h4" fontWeight="400" display="inline">
+                All edits by{" "}
+              </Typography>
+              <Typography variant="h3" fontWeight="600" display="inline">
+                {user.name}
+              </Typography>
+            </Box>
+            <Box>
+              <Button
+                variant="outlined"
+                color="blue"
+                sx={{ px: 2, py: 1, mb: 2, mr: 2 }}
+                onClick={() => navigate("/u/view/" + user._id)}
+              >
+                Back
+              </Button>
+            </Box>
+          </Box>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Time</TableCell>
+                  <TableCell>User</TableCell>
+                  <TableCell>Page</TableCell>
+                  <TableCell>Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {edits && edits.length !== 0 ? (
+                  edits.map((edit) => (
+                    <TableRow
+                      key={edit._id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {edit.time}
+                      </TableCell>
+                      <TableCell>{edit.user.name}</TableCell>
+                      <TableCell>{edit.page}</TableCell>
+                      <TableCell>
+                        {edit.desc ? (
+                          <span>{edit.desc}</span>
+                        ) : (
+                          <i style={{ color: "#aaa" }}>
+                            No description provided.
+                          </i>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5}>
+                      <span sx={{ p: 3 }}>No edits... yet</span>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Container>
+    </>
+  );
+}
+
+export default UserEditsPage;

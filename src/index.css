@@ -1,0 +1,34 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans SC", sans-serif !important;
+}
+
+body {
+  background-color: #0d6fd7;
+}
+
+.ruleslist > li {
+  padding-bottom: 1.25rem;
+}
+
+.aboutlist > li {
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.hanzi_image {
+  max-width: 200px !important;
+  max-height: 200px !important;
+}
+
+.user_pfp {
+  max-width: 80px !important;
+  max-height: 80px !important;
+  border-radius: 40px !important;
+}
