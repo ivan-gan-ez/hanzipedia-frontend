@@ -20,7 +20,7 @@ import { toast } from "sonner";
 function MegaPage() {
   const navigate = useNavigate();
 
-  const [pages, setPages] = useState("");
+  const [pages, setPages] = useState([]);
   const [radicals, setRadicals] = useState([]);
   const [radical, setRadical] = useState("all");
   const [pinyin, setPinyin] = useState("");
@@ -128,6 +128,7 @@ function MegaPage() {
           </Box>
 
           <Grid container spacing={2}>
+            {console.log(pages.length)}
             {pages && pages.length !== 0 ? (
               pages.map((page) => (
                 <Grid
