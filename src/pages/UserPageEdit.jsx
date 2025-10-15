@@ -41,6 +41,7 @@ function UserPageEdit() {
   const { token = "" } = currentuser;
 
   const [user, setUser] = useState({});
+
   const [name, setName] = useState("");
   const [role, setRole] = useState("user");
   const [numberOfEdits, setNumberOfEdits] = useState(0);
@@ -65,7 +66,7 @@ function UserPageEdit() {
       .then((data) => {
         setUser(data);
         setName(data.name);
-        setNumberOfEdits(data.role);
+        setNumberOfEdits(data.numberOfEdits);
         setRole(data.role);
         setPfp(data.pfp);
       })
@@ -90,25 +91,33 @@ function UserPageEdit() {
     navigate("/u/notfound");
   }
 
+  const hasChange = () => {
+    return name !== user.name || role !== user.role || pfp !== user.pfp;
+  };
+
   const handleClose = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Your changes will not be saved!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#0d6fd7",
-      cancelButtonColor: "#d70d0d",
-      confirmButtonText: "OK",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          navigate("/u/view/" + user._id);
-        } catch (error) {
-          console.log(error);
-          toast.error(error.response.data.error);
+    if (hasChange()) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Your changes will not be saved!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6fd7",
+        cancelButtonColor: "#d70d0d",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          try {
+            navigate("/u/view/" + user._id);
+          } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.error);
+          }
         }
-      }
-    });
+      });
+    } else {
+      navigate("/u/view/" + user._id);
+    }
   };
 
   const handleSubmit = () => {
@@ -116,6 +125,7 @@ function UserPageEdit() {
       toast.error("Name and role fields must not be empty.");
     } else {
       try {
+        console.log(id, name, role, numberOfEdits, pfp, token);
         updateUser(id, name, role, numberOfEdits, pfp, token);
         if (currentuser._id === id) {
           navigate("/u/view/" + id);
@@ -294,7 +304,8 @@ function UserPageEdit() {
                               type="file"
                               onChange={async (event) => {
                                 const data = await uploadImage(
-                                  event.target.files[0]
+                                  event.target.files[0],
+                                  token
                                 );
                                 // { image_url: "uploads/image.png" }
                                 setPfp(data.image_url);

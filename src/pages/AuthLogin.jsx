@@ -1,10 +1,17 @@
-import { Button, Container, Paper, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography,
+  Box,
+} from "@mui/material";
 import { useState } from "react";
 import validator from "email-validator";
 import { userLogin } from "../utils/api_user";
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -61,14 +68,29 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               sx={{ mb: 2 }}
             />
-            <Button
-              variant="contained"
-              color="blue"
-              fullWidth
-              onClick={handleLogin}
-            >
-              Log In
-            </Button>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                variant="contained"
+                color="red"
+                fullWidth
+                component={Link}
+                to="/"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="blue"
+                fullWidth
+                onClick={handleLogin}
+              >
+                Log In / 登录
+              </Button>
+            </Box>
+
+            <Typography color="blue" textAlign="center" sx={{ mt: 2 }}>
+              <Link to="/signup">Don't have an account? Sign up instead</Link>
+            </Typography>
           </Paper>
         </Container>
       </Container>

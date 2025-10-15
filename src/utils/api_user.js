@@ -19,12 +19,22 @@ export async function userLogin(email, password) {
   return response.data;
 }
 
-export async function getUsers(token) {
-  const response = await axios.get(API_URL + "users", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
+export async function getUsers(search, mode, role, sort, token) {
+  const response = await axios.get(
+    API_URL +
+      "users" +
+      "?sort=" +
+      sort +
+      "&mode=" +
+      mode +
+      (search ? "&search=" + search : "") +
+      (role !== "all" ? "&role=" + role : ""),
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
   return response.data;
 }
 

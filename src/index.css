@@ -28,7 +28,8 @@ a {
 }
 
 .user_pfp {
-  max-width: 80px !important;
-  max-height: 80px !important;
+  width: 80px !important;
+  height: 80px !important;
   border-radius: 40px !important;
+  object-fit: cover;
 }

@@ -55,7 +55,7 @@ function MegaPage() {
     <>
       <Container maxWidth="lg" sx={{ py: 5, minHeight: "72vh" }}>
         <Paper elevation={2} sx={{ py: 3, px: 6 }}>
-          <Box sx={{ my: 3 }}>
+          <Box sx={{ my: 3, mb: 5 }}>
             <Typography textAlign="center" variant="h4" fontWeight="600">
               All Hanzi / 全部汉字
             </Typography>

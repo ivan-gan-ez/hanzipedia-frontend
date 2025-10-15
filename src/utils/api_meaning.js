@@ -14,12 +14,8 @@ export async function getMeaningOfHanzi(hanzi) {
   }
 }
 
-export async function getMeaningById(id, token) {
-  const response = await axios.get(API_URL + "meanings/" + id, {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
+export async function getMeaningById(id) {
+  const response = await axios.get(API_URL + "meanings/" + id, {});
   return response.data;
 }
 

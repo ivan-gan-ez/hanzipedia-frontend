@@ -137,7 +137,7 @@ function HanziPage() {
                         <TableRow>
                           <TableCell>Radical</TableCell>
                           <TableCell>
-                            {hanzi.radical !== hanzi.id ? (
+                            {hanzi.radical !== hanzi._id ? (
                               <a
                                 href={"/h/" + hanzi.radical}
                                 style={{

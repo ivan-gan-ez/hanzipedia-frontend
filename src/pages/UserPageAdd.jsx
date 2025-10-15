@@ -16,6 +16,7 @@ import validator from "email-validator";
 import { useCookies } from "react-cookie";
 import { isAdmin } from "../utils/functions";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 function UserPageAdd() {
   const navigate = useNavigate();
@@ -35,6 +36,31 @@ function UserPageAdd() {
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
 
+  const handleClose = () => {
+    if (name || email || password || confPassword) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Your changes will not be saved!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6fd7",
+        cancelButtonColor: "#d70d0d",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          try {
+            navigate("/u/");
+          } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.error);
+          }
+        }
+      });
+    } else {
+      navigate("/u/");
+    }
+  };
+
   const handleSubmit = async () => {
     if (!name || !email || !password || !confPassword) {
       toast.error("Please fill up all the fields.");
@@ -44,6 +70,7 @@ function UserPageAdd() {
       toast.error("Your passwords do not match.");
     } else {
       const response = await addUser(name, email, password, token);
+      toast.success("User successfully added!");
       navigate("/u/view/" + response._id);
     }
   };
@@ -73,7 +100,7 @@ function UserPageAdd() {
                   display="inline"
                   sx={{ ml: 2 }}
                 >
-                  Add User / 添加用户
+                  Add User
                 </Typography>
               </Box>
             </Box>
@@ -122,14 +149,24 @@ function UserPageAdd() {
               />
             </Box>
 
-            <Button
-              variant="contained"
-              color="blue"
-              fullWidth
-              onClick={handleSubmit}
-            >
-              Add
-            </Button>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                variant="contained"
+                color="red"
+                fullWidth
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="blue"
+                fullWidth
+                onClick={handleSubmit}
+              >
+                Add
+              </Button>
+            </Box>
           </>
         </Paper>
       </Container>

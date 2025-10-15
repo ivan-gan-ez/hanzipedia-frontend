@@ -14,7 +14,15 @@ import {
   TableRow,
   TableHead,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Chip,
 } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 
 import { API_URL } from "../utils/constants";
 
@@ -30,10 +38,15 @@ function UserboardPage() {
   const { currentuser = {} } = cookies;
   const { token = "" } = currentuser;
 
+  const [search, setSearch] = useState("");
+  const [mode, setMode] = useState("name");
+  const [role, setRole] = useState("all");
+  const [sort, setSort] = useState("lastupdated");
+
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    getUsers(token)
+    getUsers(search, mode, role, sort, token)
       .then((data) => {
         setUsers(data);
       })
@@ -41,38 +54,97 @@ function UserboardPage() {
         console.log(error);
         navigate("/unauthorised");
       });
-  }, [token]);
+  }, [search, mode, role, sort, token]);
 
   return (
     <>
       <Container maxWidth="lg" sx={{ py: 5, minHeight: "72vh" }}>
         <Paper elevation={2} sx={{ py: 6, px: 6 }}>
+          <Box
+            sx={{
+              mb: 5,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box>
+              <Typography variant="h4" fontWeight="600" display="inline">
+                All Users / 全部用户
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="end">
+              <Button
+                variant="contained"
+                sx={{ px: 2, py: 1, mb: 2 }}
+                component={Link}
+                to={"/u/add"}
+              >
+                Add User
+              </Button>
+            </Box>
+          </Box>
+          {/* filters here */}
+          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+            <Box display="flex" flexDirection={{ xs: "column", md: "row" }}>
+              <FormControl sx={{ width: "7rem", mr: 3 }} display="inline">
+                <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={role}
+                  label="Role"
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <MenuItem value={"all"}>All</MenuItem>
+                  <MenuItem value={"user"}>Users</MenuItem>
+                  <MenuItem value={"admin"}>Admins</MenuItem>
+                  <MenuItem value={"owner"}>Owner</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ width: "7rem", mr: 1 }} display="inline">
+                <InputLabel id="demo-simple-select-label">Search by</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={mode}
+                  label="Search by"
+                  onChange={(e) => setMode(e.target.value)}
+                >
+                  <MenuItem value={"name"}>Name</MenuItem>
+                  <MenuItem value={"email"}>Email</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                sx={{ width: "10rem", mr: 3, mt: { xs: 2, md: 0 } }}
+                label="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              ></TextField>
+
+              <FormControl
+                sx={{ width: "10rem", mt: { xs: 2, md: 0 } }}
+                display="inline"
+              >
+                <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+                <Select
+                  labelId="demo-simple-select5abel"
+                  id="demo-simple-select"
+                  value={sort}
+                  label="Sort"
+                  onChange={(e) => setSort(e.target.value)}
+                >
+                  <MenuItem value={"lastupdated"}>Last Updated</MenuItem>
+                  <MenuItem value={"name"}>Name</MenuItem>
+                  <MenuItem value={"email"}>Email</MenuItem>
+                  <MenuItem value={"edits"}>Edits</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+
           {users ? (
             <>
-              <Box
-                sx={{
-                  mb: 5,
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box>
-                  <Typography variant="h3" fontWeight="600" display="inline">
-                    All Users / 全部用户
-                  </Typography>
-                </Box>
-                <Box display="flex" justifyContent="end">
-                  <Button
-                    variant="contained"
-                    sx={{ px: 2, py: 1, mb: 2 }}
-                    component={Link}
-                    to={"/u/add"}
-                  >
-                    Add User
-                  </Button>
-                </Box>
-              </Box>
-
               {/*Users */}
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -102,7 +174,18 @@ function UserboardPage() {
                             </TableCell>
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
-                            <TableCell>{user.role}</TableCell>
+                            <TableCell>
+                              <Chip
+                                label={user.role}
+                                color={
+                                  user.role === "owner"
+                                    ? "blue"
+                                    : user.role === "admin"
+                                    ? "red"
+                                    : ""
+                                }
+                              />
+                            </TableCell>
                             <TableCell align="right">
                               {user.numberOfEdits}
                             </TableCell>
@@ -117,7 +200,7 @@ function UserboardPage() {
                                   component={Link}
                                   to={"/u/view/" + user._id}
                                 >
-                                  View
+                                  <VisibilityIcon />
                                 </Button>
                                 {!isAdmin(user) ||
                                 (isAdmin(user) &&
@@ -133,7 +216,7 @@ function UserboardPage() {
                                       mt: { sm: 1, lg: 0 },
                                     }}
                                   >
-                                    Edit
+                                    <DriveFileRenameOutlineIcon />
                                   </Button>
                                 ) : (
                                   ""

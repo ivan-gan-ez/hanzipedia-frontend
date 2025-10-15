@@ -19,7 +19,6 @@ import { useCookies } from "react-cookie";
 import { isUser } from "../utils/functions";
 import { getEdits } from "../utils/api_edit";
 import { getUserById } from "../utils/api_user";
-import { CrueltyFree } from "@mui/icons-material";
 
 function UserEditsPage() {
   const navigate = useNavigate();
@@ -113,8 +112,28 @@ function UserEditsPage() {
                       <TableCell component="th" scope="row">
                         {edit.time}
                       </TableCell>
-                      <TableCell>{edit.user.name}</TableCell>
-                      <TableCell>{edit.page}</TableCell>
+                      <TableCell>
+                        {edit.user ? (
+                          <Typography
+                            component={Link}
+                            to={"/u/view/" + edit.user._id}
+                            color="blue.main"
+                          >
+                            {edit.user.name}
+                          </Typography>
+                        ) : (
+                          <i style={{ color: "#aaa" }}>deleted user</i>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          component={Link}
+                          to={"/h/" + edit.page}
+                          color="blue.main"
+                        >
+                          {edit.page}
+                        </Typography>
+                      </TableCell>
                       <TableCell>
                         {edit.desc ? (
                           <span>{edit.desc}</span>

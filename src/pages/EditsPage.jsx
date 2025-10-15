@@ -124,8 +124,14 @@ function EditsPage() {
                         {edit.time}
                       </TableCell>
                       <TableCell>
-                        {edit.user.name ? (
-                          <span>{edit.user.name}</span>
+                        {edit.user ? (
+                          <Typography
+                            component={Link}
+                            to={"/u/view/" + edit.user._id}
+                            color="blue.main"
+                          >
+                            {edit.user.name}
+                          </Typography>
                         ) : (
                           <i style={{ color: "#aaa" }}>deleted user</i>
                         )}

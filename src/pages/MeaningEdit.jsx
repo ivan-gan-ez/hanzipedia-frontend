@@ -58,7 +58,7 @@ function MeaningPageEdit() {
   const [exampleSentences, setExampleSentences] = useState("");
 
   useEffect(() => {
-    getMeaningById(id, token)
+    getMeaningById(id)
       .then((data) => {
         if (data === "") {
           navigate("/notfound");
@@ -94,25 +94,38 @@ function MeaningPageEdit() {
       });
   }, []);
 
+  const hasChange = () => {
+    return (
+      pinyin !== meaning.pinyin ||
+      type !== meaning.type ||
+      definition !== meaning.meaning ||
+      exampleSentences !== meaning.exampleSentences.join("||")
+    );
+  };
+
   const handleClose = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Your changes will not be saved!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#0d6fd7",
-      cancelButtonColor: "#d70d0d",
-      confirmButtonText: "OK",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          navigate("/h/edit/" + meaning.character);
-        } catch (error) {
-          console.log(error);
-          toast.error(error.response.data.error);
+    if (hasChange()) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Your changes will not be saved!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6fd7",
+        cancelButtonColor: "#d70d0d",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          try {
+            navigate("/h/edit/" + meaning.character);
+          } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.error);
+          }
         }
-      }
-    });
+      });
+    } else {
+      navigate("/h/edit/" + meaning.character);
+    }
   };
 
   const handleMeaningSave = () => {

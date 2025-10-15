@@ -138,6 +138,16 @@ function HanziPageEdit() {
       });
   }, []);
 
+  const hasChange = () => {
+    return (
+      pinyin !== hanzi.pinyin ||
+      radical !== hanzi.radical ||
+      components !== hanzi.parts ||
+      trad !== hanzi.traditional ||
+      image !== hanzi.image
+    );
+  };
+
   const handleEditSave = (route) => {
     if (!pinyin || !radical || !components || !trad) {
       toast.error("Please do not leave any fields empty.");
@@ -154,16 +164,18 @@ function HanziPageEdit() {
     } else {
       try {
         if (pageExists) {
-          editPage(
-            hanzi._id,
-            pinyin,
-            radical,
-            trad,
-            components.toString().split(","),
-            image,
-            token
-          );
-          addEdit(currentuser._id, hanzi._id, editDesc, token);
+          if (hasChange()) {
+            editPage(
+              hanzi._id,
+              pinyin,
+              radical,
+              trad,
+              components.toString().split(","),
+              image,
+              token
+            );
+            addEdit(currentuser._id, hanzi._id, editDesc, token);
+          }
         } else {
           addPage(
             id,
@@ -176,14 +188,17 @@ function HanziPageEdit() {
           );
           addEdit(currentuser._id, id, editDesc, token);
         }
-        updateUser(
-          currentuser._id,
-          currentuser.name,
-          currentuser.role,
-          user.numberOfEdits + 1,
-          currentuser.pfp,
-          token
-        );
+
+        if (hasChange()) {
+          updateUser(
+            currentuser._id,
+            currentuser.name,
+            currentuser.role,
+            user.numberOfEdits + 1,
+            currentuser.pfp,
+            token
+          );
+        }
         setEditDesc("");
         navigate(route);
       } catch (error) {
@@ -194,24 +209,28 @@ function HanziPageEdit() {
   };
 
   const confirmMeaningRedir = (route) => {
-    Swal.fire({
-      title: "Warning",
-      text: "Redirecting you to the definition editing page will autosave your current changes. Do you want to proceed?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#0d6fd7",
-      cancelButtonColor: "#d70d0d",
-      confirmButtonText: "OK",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          handleEditSave(route);
-        } catch (error) {
-          console.log(error);
-          toast.error(error.response.data.error);
+    if (hasChange()) {
+      Swal.fire({
+        title: "Warning",
+        text: "Redirecting you to the definition editing page will autosave your current changes. Do you want to proceed?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6fd7",
+        cancelButtonColor: "#d70d0d",
+        confirmButtonText: "OK",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            handleEditSave(route);
+          } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.error);
+          }
         }
-      }
-    });
+      });
+    } else {
+      navigate(route);
+    }
   };
 
   const handleDelete = () => {
@@ -226,6 +245,7 @@ function HanziPageEdit() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          addEdit(currentuser._id, id, "Deleted " + id, token);
           deleteMeaningsOfHanzi(id, token);
           deletePage(id, token);
           navigate("/");
@@ -238,24 +258,28 @@ function HanziPageEdit() {
   };
 
   const handleClose = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Your changes will not be saved!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#0d6fd7",
-      cancelButtonColor: "#d70d0d",
-      confirmButtonText: "OK",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          navigate(pageExists ? "/h/" + hanzi._id : "/h/" + id);
-        } catch (error) {
-          console.log(error);
-          toast.error(error.response.data.error);
+    if (hasChange()) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Your changes will not be saved!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6fd7",
+        cancelButtonColor: "#d70d0d",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          try {
+            navigate(pageExists ? "/h/" + hanzi._id : "/h/" + id);
+          } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.error);
+          }
         }
-      }
-    });
+      });
+    } else {
+      navigate(pageExists ? "/h/" + hanzi._id : "/h/" + id);
+    }
   };
 
   return (
@@ -465,7 +489,8 @@ function HanziPageEdit() {
                             type="file"
                             onChange={async (event) => {
                               const data = await uploadImage(
-                                event.target.files[0]
+                                event.target.files[0],
+                                token
                               );
                               // { image_url: "uploads/image.png" }
                               setImage(data.image_url);
