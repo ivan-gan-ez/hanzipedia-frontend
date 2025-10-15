@@ -21,6 +21,7 @@ import { useNavigate, useLocation } from "react-router";
 import { API_URL } from "../utils/constants";
 import { isAdmin, isHanzi } from "../utils/functions";
 import { toast } from "sonner";
+import { getUserById } from "../utils/api_user";
 
 const pages = [
   { name: "Home/主页", url: "/" },
@@ -37,6 +38,8 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [pfp, setPfp] = useState("");
+
   const [search, setSearch] = useState("");
 
   const [settings, setSettings] = useState([
@@ -51,6 +54,16 @@ function Navbar() {
         { name: "Log Out", url: "/logout" },
       ]);
     }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    getUserById(currentuser._id, token).then((data) => {
+      try {
+        setPfp(data.pfp);
+      } catch (error) {
+        console.log(error);
+      }
+    });
   }, [location.pathname]);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -282,12 +295,14 @@ function Navbar() {
                   }
                   src={
                     currentuser && currentuser._id
-                      ? currentuser.pfp
-                        ? API_URL + currentuser.pfp
+                      ? pfp
+                        ? API_URL + pfp
                         : "/placeholder_pfp.png"
                       : "/placeholder_pfp_loggedout.png"
                   }
                 />
+                {console.log(location.pathname)}
+                {console.log(pfp)}
               </IconButton>
             </Tooltip>
             <Menu

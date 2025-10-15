@@ -128,7 +128,7 @@ function MegaPage() {
           </Box>
 
           <Grid container spacing={2}>
-            {pages ? (
+            {pages && pages.length !== 0 ? (
               pages.map((page) => (
                 <Grid
                   key={page._id}
