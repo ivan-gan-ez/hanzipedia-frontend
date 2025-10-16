@@ -73,8 +73,6 @@ function UserPageEdit() {
             (data.role === "admin" || data.role === "owner") &&
             data._id !== currentuser._id)
         ) {
-          console.log(currentuser);
-          console.log(data);
           navigate("/unauthorised");
         } else {
           setUser(data);

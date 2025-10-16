@@ -18,7 +18,7 @@ function UnauthorisedPage() {
             fontWeight="400"
             sx={{ mb: 2 }}
           >
-            You were trying to enter a restricted or nonexistent page.
+            You were trying to enter a restricted page.
           </Typography>
           <Typography textAlign="center" sx={{ mb: 6 }}>
             不准进去！

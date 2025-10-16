@@ -93,10 +93,6 @@ function UserPage() {
                   size="small"
                 >
                   View Edits
-                  {console.log(isAdmin(currentuser))}
-                  {console.log(user.role)}
-                  {console.log(user.role !== "admin" && user.role !== "owner")}
-                  {console.log(user._id === currentuser._id)}
                 </Button>
                 {currentuser ? (
                   (isAdmin(currentuser) &&
