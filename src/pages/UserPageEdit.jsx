@@ -148,12 +148,13 @@ function UserPageEdit() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deleteUser(id, token);
-          // if (currentuser._id === id) {
-          //   navigate("/logout");
-          // } else {
-          //   navigate("/u/");
-          // }
+          await deleteUser(id, token).then((data) => {
+            if (currentuser._id === id) {
+              navigate("/logout");
+            } else {
+              navigate("/u/");
+            }
+          });
         } catch (error) {
           console.log(error);
           toast.error(error.response.data.error);
