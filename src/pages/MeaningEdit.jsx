@@ -148,13 +148,12 @@ function MeaningPageEdit() {
           "Edited a definition of " + hanzi._id,
           token
         );
-        console.log(user.numberOfEdits);
         updateUser(
-          currentuser._id,
-          currentuser.name,
-          currentuser.role,
+          user._id,
+          user.name,
+          user.role,
           user.numberOfEdits + 1,
-          currentuser.pfp,
+          user.pfp,
           token
         );
         navigate("/h/edit/" + meaning.character);
@@ -185,11 +184,11 @@ function MeaningPageEdit() {
             token
           );
           updateUser(
-            currentuser._id,
-            currentuser.name,
-            currentuser.role,
+            user._id,
+            user.name,
+            user.role,
             user.numberOfEdits + 1,
-            currentuser.pfp,
+            user.pfp,
             token
           );
           navigate("/h/edit/" + hanzi._id);

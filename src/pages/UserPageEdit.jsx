@@ -125,7 +125,6 @@ function UserPageEdit() {
       toast.error("Name and role fields must not be empty.");
     } else {
       try {
-        console.log(id, name, role, numberOfEdits, pfp, token);
         updateUser(id, name, role, numberOfEdits, pfp, token);
         if (currentuser._id === id) {
           navigate("/u/view/" + id);

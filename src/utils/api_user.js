@@ -65,8 +65,6 @@ export async function addUser(name, email, password, token) {
 }
 
 export async function updateUser(id, name, role, numberOfEdits, pfp, token) {
-  console.log(numberOfEdits);
-
   const response = await axios.put(
     API_URL + "users/" + id,
     {

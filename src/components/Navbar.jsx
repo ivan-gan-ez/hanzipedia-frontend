@@ -301,8 +301,6 @@ function Navbar() {
                       : "/placeholder_pfp_loggedout.png"
                   }
                 />
-                {console.log(location.pathname)}
-                {console.log(pfp)}
               </IconButton>
             </Tooltip>
             <Menu

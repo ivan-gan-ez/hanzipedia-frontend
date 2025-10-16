@@ -191,11 +191,11 @@ function HanziPageEdit() {
 
         if (hasChange()) {
           updateUser(
-            currentuser._id,
-            currentuser.name,
-            currentuser.role,
+            user._id,
+            user.name,
+            user.role,
             user.numberOfEdits + 1,
-            currentuser.pfp,
+            user.pfp,
             token
           );
         }

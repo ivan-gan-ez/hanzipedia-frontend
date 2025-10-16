@@ -128,11 +128,11 @@ function MeaningPageAdd() {
           token
         );
         updateUser(
-          currentuser._id,
-          currentuser.name,
-          currentuser.role,
+          user._id,
+          user.name,
+          user.role,
           user.numberOfEdits + 1,
-          currentuser.pfp,
+          user.pfp,
           token
         );
         navigate("/h/edit/" + hanzi._id);

@@ -128,7 +128,6 @@ function MegaPage() {
           </Box>
 
           <Grid container spacing={2}>
-            {console.log(pages.length)}
             {pages && pages.length !== 0 ? (
               pages.map((page) => (
                 <Grid

@@ -37,7 +37,6 @@ function UserPage() {
   useEffect(() => {
     getUserById(id, token)
       .then((data) => {
-        console.log(data);
         setUser(data);
       })
       .catch((error) => {

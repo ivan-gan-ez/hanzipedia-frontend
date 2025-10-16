@@ -56,7 +56,6 @@ function EditsPage() {
   }
 
   useEffect(() => {
-    console.log(hanzi._id);
     getEdits(hanzi._id, "", token)
       .then((data) => {
         setEdits(data);
