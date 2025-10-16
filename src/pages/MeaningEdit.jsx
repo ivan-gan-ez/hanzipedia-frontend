@@ -128,12 +128,12 @@ function MeaningPageEdit() {
     }
   };
 
-  const handleMeaningSave = () => {
+  const handleMeaningSave = async () => {
     if (!pinyin || !type || !definition) {
       toast.error("Please do not leave any fields empty.");
     } else {
       try {
-        editMeaning(
+        await editMeaning(
           id,
           meaning.character,
           pinyin,
@@ -142,13 +142,13 @@ function MeaningPageEdit() {
           exampleSentences.toString().split("||"),
           token
         );
-        addEdit(
+        await addEdit(
           currentuser._id,
           hanzi._id,
           "Edited a definition of " + hanzi._id,
           token
         );
-        updateUser(
+        await updateUser(
           user._id,
           user.name,
           user.role,
@@ -164,7 +164,7 @@ function MeaningPageEdit() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     Swal.fire({
       title: "Are you sure?",
       text: "This action cannot be undone!",
@@ -176,14 +176,14 @@ function MeaningPageEdit() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          deleteMeaningById(id, token);
-          addEdit(
+          await deleteMeaningById(id, token);
+          await addEdit(
             currentuser._id,
             hanzi._id,
             "Deleted a definition of " + hanzi._id,
             token
           );
-          updateUser(
+          await updateUser(
             user._id,
             user.name,
             user.role,

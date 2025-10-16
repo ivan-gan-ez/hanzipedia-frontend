@@ -24,12 +24,10 @@ import {
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 
-import { API_URL } from "../utils/constants";
-
-import { Link, useParams, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { getUsers } from "../utils/api_user";
 import { useCookies } from "react-cookie";
-import { isUser, isAdmin, isOwner } from "../utils/functions";
+import { isAdmin, isOwner } from "../utils/functions";
 
 function UserboardPage() {
   const navigate = useNavigate();

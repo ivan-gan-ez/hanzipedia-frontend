@@ -1,7 +1,5 @@
 import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import validator from "email-validator";
-import { userSignup } from "../utils/api_user";
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
@@ -12,6 +10,7 @@ const LogoutPage = () => {
 
   useEffect(() => {
     removeCookie("currentuser");
+    toast.success("Logout successful!");
     window.location.href = "/";
   }, [cookies]);
 

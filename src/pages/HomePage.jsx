@@ -33,17 +33,17 @@ function HomePage() {
     });
   }, [change]);
 
-  const handleFeature = () => {
+  const handleFeature = async () => {
     if (!featured) {
       toast.error("Featured field must not be empty.");
     } else if (!isHanzi(featured)) {
       toast.error("Featured field must consist of exactly one hanzi.");
     } else {
-      getPage(featured).then((data) => {
+      getPage(featured).then(async (data) => {
         if (!data) {
           toast.error("Page does not exist yet.");
         } else {
-          featurePage(featured, true, token);
+          await featurePage(featured, true, token);
           setChange(change + 1);
           setFeatured("");
         }
@@ -51,8 +51,8 @@ function HomePage() {
     }
   };
 
-  const handleRemove = (hanzi) => {
-    featurePage(hanzi, false, token);
+  const handleRemove = async (hanzi) => {
+    await featurePage(hanzi, false, token);
     setChange(change + 1);
   };
 

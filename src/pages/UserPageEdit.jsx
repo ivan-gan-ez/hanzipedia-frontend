@@ -120,12 +120,12 @@ function UserPageEdit() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name || !role) {
       toast.error("Name and role fields must not be empty.");
     } else {
       try {
-        updateUser(id, name, role, numberOfEdits, pfp, token);
+        await updateUser(id, name, role, numberOfEdits, pfp, token);
         if (currentuser._id === id) {
           navigate("/u/view/" + id);
         } else {
@@ -138,7 +138,7 @@ function UserPageEdit() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     Swal.fire({
       title: "Are you sure?",
       text: "This action cannot be undone!",
@@ -150,7 +150,7 @@ function UserPageEdit() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          deleteUser(id, token);
+          await deleteUser(id, token);
           if (currentuser._id === id) {
             navigate("/logout");
           } else {

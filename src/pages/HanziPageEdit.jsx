@@ -148,7 +148,7 @@ function HanziPageEdit() {
     );
   };
 
-  const handleEditSave = (route) => {
+  const handleEditSave = async (route) => {
     if (!pinyin || !radical || !components || !trad) {
       toast.error("Please do not leave any fields empty.");
     } else if (!isHanzi(radical) || Array.from(radical).length !== 1) {
@@ -165,7 +165,7 @@ function HanziPageEdit() {
       try {
         if (pageExists) {
           if (hasChange()) {
-            editPage(
+            await editPage(
               hanzi._id,
               pinyin,
               radical,
@@ -174,10 +174,10 @@ function HanziPageEdit() {
               image,
               token
             );
-            addEdit(currentuser._id, hanzi._id, editDesc, token);
+            await addEdit(currentuser._id, hanzi._id, editDesc, token);
           }
         } else {
-          addPage(
+          await addPage(
             id,
             pinyin,
             radical,
@@ -186,11 +186,11 @@ function HanziPageEdit() {
             image,
             token
           );
-          addEdit(currentuser._id, id, editDesc, token);
+          await addEdit(currentuser._id, id, editDesc, token);
         }
 
         if (hasChange()) {
-          updateUser(
+          await updateUser(
             user._id,
             user.name,
             user.role,
@@ -208,7 +208,7 @@ function HanziPageEdit() {
     }
   };
 
-  const confirmMeaningRedir = (route) => {
+  const confirmMeaningRedir = async (route) => {
     if (hasChange()) {
       Swal.fire({
         title: "Warning",
@@ -221,7 +221,7 @@ function HanziPageEdit() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            handleEditSave(route);
+            await handleEditSave(route);
           } catch (error) {
             console.log(error);
             toast.error(error.response.data.error);
@@ -233,7 +233,7 @@ function HanziPageEdit() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     Swal.fire({
       title: "Are you sure?",
       text: "This action cannot be undone!",
@@ -245,9 +245,9 @@ function HanziPageEdit() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          addEdit(currentuser._id, id, "Deleted " + id, token);
-          deleteMeaningsOfHanzi(id, token);
-          deletePage(id, token);
+          await addEdit(currentuser._id, id, "Deleted " + id, token);
+          await deleteMeaningsOfHanzi(id, token);
+          await deletePage(id, token);
           navigate("/");
         } catch (error) {
           console.log(error);

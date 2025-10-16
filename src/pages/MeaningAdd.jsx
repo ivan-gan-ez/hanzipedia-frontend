@@ -108,12 +108,12 @@ function MeaningPageAdd() {
     }
   };
 
-  const handleMeaningSave = () => {
+  const handleMeaningSave = async () => {
     if (!pinyin || !type || !definition) {
       toast.error("Please do not leave any fields empty.");
     } else {
       try {
-        addMeaning(
+        await addMeaning(
           hanzi._id,
           pinyin,
           type,
@@ -121,13 +121,13 @@ function MeaningPageAdd() {
           exampleSentences.toString().split("||"),
           token
         );
-        addEdit(
+        await addEdit(
           currentuser._id,
           hanzi._id,
           "Added a definition to " + hanzi._id,
           token
         );
-        updateUser(
+        await updateUser(
           user._id,
           user.name,
           user.role,
