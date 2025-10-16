@@ -42,6 +42,8 @@ function EditsPage() {
       .then((data) => {
         if (data === "invalid") {
           navigate("/h/invalid");
+        } else if (!data) {
+          navigate("/notfound");
         } else {
           setHanzi(data);
         }
@@ -50,10 +52,6 @@ function EditsPage() {
         console.log(error);
       });
   }, [id]);
-
-  if (!hanzi) {
-    navigate("/notfound");
-  }
 
   useEffect(() => {
     getEdits(hanzi._id, "", token)

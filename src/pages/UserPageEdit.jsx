@@ -64,32 +64,31 @@ function UserPageEdit() {
   useEffect(() => {
     getUserById(id, token)
       .then((data) => {
-        setUser(data);
-        setName(data.name);
-        setNumberOfEdits(data.numberOfEdits);
-        setRole(data.role);
-        setPfp(data.pfp);
+        if (!data) {
+          navigate("/u/notfound");
+        } else if (
+          !isAdmin(currentuser) ||
+          (isAdmin(currentuser) &&
+            !isOwner(currentuser) &&
+            (data.role === "admin" || data.role === "owner") &&
+            data._id !== currentuser._id)
+        ) {
+          console.log(currentuser);
+          console.log(data);
+          navigate("/unauthorised");
+        } else {
+          setUser(data);
+          setName(data.name);
+          setNumberOfEdits(data.numberOfEdits);
+          setRole(data.role);
+          setPfp(data.pfp);
+        }
       })
       .catch((error) => {
         console.log(error);
         navigate("/unauthorised");
       });
   }, [id, token]);
-
-  if (!isUser(currentuser)) {
-    navigate("/unauthorised");
-  } else if (
-    (!isAdmin(currentuser) && user._id !== currentuser._id) ||
-    (isAdmin(currentuser) &&
-      !isOwner(currentuser) &&
-      (user.role === "admin" || user.role === "owner"))
-  ) {
-    navigate("/unauthorised");
-  }
-
-  if (!user) {
-    navigate("/u/notfound");
-  }
 
   const hasChange = () => {
     return name !== user.name || role !== user.role || pfp !== user.pfp;

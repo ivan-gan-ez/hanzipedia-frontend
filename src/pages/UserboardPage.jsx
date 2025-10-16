@@ -203,7 +203,8 @@ function UserboardPage() {
                                 {!isAdmin(user) ||
                                 (isAdmin(user) &&
                                   !isOwner(user) &&
-                                  currentuser.role === "owner") ? (
+                                  currentuser.role === "owner") ||
+                                user._id === currentuser._id ? (
                                   <Button
                                     variant="contained"
                                     color="blue"

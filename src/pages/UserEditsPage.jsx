@@ -38,17 +38,17 @@ function UserEditsPage() {
   useEffect(() => {
     getUserById(id, token)
       .then((data) => {
-        setUser(data);
+        if (!user) {
+          navigate("/u/notfound");
+        } else {
+          setUser(data);
+        }
       })
       .catch((error) => {
         console.log(error);
         navigate("/unauthorised");
       });
   }, [id, token]);
-
-  if (!user) {
-    navigate("/u/notfound");
-  }
 
   useEffect(() => {
     getEdits("", user._id, token)

@@ -58,20 +58,17 @@ function MeaningPageAdd() {
       .then((data) => {
         if (data === "invalid") {
           navigate("/h/invalid");
+        } else if (!data) {
+          navigate("/notfound");
         } else {
           setHanzi(data);
           setPinyins(data.pinyin.split(", "));
-          console.log(data);
         }
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-
-  if (!hanzi) {
-    navigate("/notfound");
-  }
 
   useEffect(() => {
     getUserById(currentuser._id, token)

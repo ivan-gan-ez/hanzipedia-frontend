@@ -19,7 +19,7 @@ import {
 import { Link, useParams, useNavigate } from "react-router";
 import { getUserById } from "../utils/api_user";
 import { useCookies } from "react-cookie";
-import { isUser, isAdmin } from "../utils/functions";
+import { isUser, isAdmin, isOwner } from "../utils/functions";
 
 import { API_URL } from "../utils/constants";
 
@@ -37,21 +37,17 @@ function UserPage() {
   useEffect(() => {
     getUserById(id, token)
       .then((data) => {
-        setUser(data);
+        if (!data) {
+          navigate("/u/notfound");
+        } else {
+          setUser(data);
+        }
       })
       .catch((error) => {
         console.log(error);
-        navigate("/u/notfound");
+        navigate("/unauthorised");
       });
   }, [id, token]);
-
-  if (!isUser(currentuser)) {
-    navigate("/unauthorised");
-  }
-
-  if (!user) {
-    navigate("/u/notfound");
-  }
 
   return (
     <>
@@ -97,9 +93,17 @@ function UserPage() {
                   size="small"
                 >
                   View Edits
+                  {console.log(isAdmin(currentuser))}
+                  {console.log(user.role)}
+                  {console.log(user.role !== "admin" && user.role !== "owner")}
+                  {console.log(user._id === currentuser._id)}
                 </Button>
-                {currentuser &&
-                  (isAdmin(currentuser) || user._id === currentuser._id ? (
+                {currentuser ? (
+                  (isAdmin(currentuser) &&
+                    user.role !== "admin" &&
+                    user.role !== "owner") ||
+                  user._id === currentuser._id ||
+                  isOwner(currentuser) ? (
                     <Button
                       variant="contained"
                       sx={{ px: 2, py: 1, mb: 2, ml: 2 }}
@@ -111,7 +115,8 @@ function UserPage() {
                     </Button>
                   ) : (
                     ""
-                  ))}
+                  )
+                ) : null}
               </Box>
             </Box>
 
