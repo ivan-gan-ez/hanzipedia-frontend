@@ -32,6 +32,7 @@ import { useCookies } from "react-cookie";
 import { isUser, isAdmin, isOwner } from "../utils/functions";
 import Swal from "sweetalert2";
 import { uploadImage } from "../utils/api_image";
+import { toast } from "sonner";
 
 function UserPageEdit() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ function UserPageEdit() {
         if (!data) {
           navigate("/u/notfound");
         } else if (
-          !isAdmin(currentuser) ||
+          (!isAdmin(currentuser) && data._id !== currentuser._id) ||
           (isAdmin(currentuser) &&
             !isOwner(currentuser) &&
             (data.role === "admin" || data.role === "owner") &&
@@ -148,11 +149,11 @@ function UserPageEdit() {
       if (result.isConfirmed) {
         try {
           await deleteUser(id, token);
-          if (currentuser._id === id) {
-            navigate("/logout");
-          } else {
-            navigate("/u/");
-          }
+          // if (currentuser._id === id) {
+          //   navigate("/logout");
+          // } else {
+          //   navigate("/u/");
+          // }
         } catch (error) {
           console.log(error);
           toast.error(error.response.data.error);
@@ -317,7 +318,7 @@ function UserPageEdit() {
               </Table>
             </TableContainer>
 
-            {!(isOwner(currentuser) && role === "owner") ? (
+            {!(isOwner(currentuser) && role === "owner") && role ? (
               <Button
                 fullWidth
                 variant="contained"

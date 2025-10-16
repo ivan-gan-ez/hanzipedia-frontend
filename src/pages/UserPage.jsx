@@ -107,7 +107,7 @@ function UserPage() {
                       to={"/u/edit/" + id}
                       size="small"
                     >
-                      Edit Page
+                      Edit User
                     </Button>
                   ) : (
                     ""
